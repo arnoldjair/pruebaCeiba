@@ -1,10 +1,12 @@
 package dominio.unitaria;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
 
 import dominio.Producto;
+import dominio.excepcion.GarantiaExtendidaException;
 import testdatabuilder.ProductoTestDataBuilder;
 
 public class ProductoTest {
@@ -15,12 +17,10 @@ public class ProductoTest {
 
 	@Test
 	public void crearProductoTest() {
-		
+
 		// arrange
-		ProductoTestDataBuilder productoTestDataBuilder = new ProductoTestDataBuilder().
-				conNombre(NOMBRE_PRODUCTO).
-				conCodigo(CODIGO).
-				conPrecio(PRECIO);
+		ProductoTestDataBuilder productoTestDataBuilder = new ProductoTestDataBuilder().conNombre(NOMBRE_PRODUCTO)
+				.conCodigo(CODIGO).conPrecio(PRECIO);
 
 		// act
 		Producto producto = productoTestDataBuilder.build();
@@ -28,7 +28,16 @@ public class ProductoTest {
 		// assert
 		assertEquals(NOMBRE_PRODUCTO, producto.getNombre());
 		assertEquals(CODIGO, producto.getCodigo());
-		assertEquals(PRECIO, producto.getPrecio(),0);
+		assertEquals(PRECIO, producto.getPrecio(), 0);
 	}
 
+	@Test(expected = GarantiaExtendidaException.class)
+	public void validarCodigoExceptionTest() {
+		Producto.validarCodigo("prueba");
+	}
+
+	@Test
+	public void validarCodigoTest() {
+		assertTrue(Producto.validarCodigo("codigoPrueba"));
+	}
 }

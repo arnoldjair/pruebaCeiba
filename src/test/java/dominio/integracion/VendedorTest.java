@@ -2,6 +2,8 @@ package dominio.integracion;
 
 import static org.junit.Assert.fail;
 
+import java.time.LocalDate;
+
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
@@ -18,6 +20,7 @@ import testdatabuilder.ProductoTestDataBuilder;
 public class VendedorTest {
 
 	private static final String COMPUTADOR_LENOVO = "Computador Lenovo";
+	private static final String USUARIO = "Alejandro Plaza";
 	
 	private SistemaDePersistencia sistemaPersistencia;
 	
@@ -50,7 +53,7 @@ public class VendedorTest {
 		Vendedor vendedor = new Vendedor(repositorioProducto, repositorioGarantia);
 
 		// act
-		vendedor.generarGarantia(producto.getCodigo());
+		vendedor.generarGarantia(producto.getCodigo(), USUARIO);
 
 		// assert
 		Assert.assertTrue(vendedor.tieneGarantia(producto.getCodigo()));
@@ -69,15 +72,30 @@ public class VendedorTest {
 		Vendedor vendedor = new Vendedor(repositorioProducto, repositorioGarantia);
 
 		// act
-		vendedor.generarGarantia(producto.getCodigo());;
+		vendedor.generarGarantia(producto.getCodigo(), USUARIO);
 		try {
 			
-			vendedor.generarGarantia(producto.getCodigo());
+			vendedor.generarGarantia(producto.getCodigo(), USUARIO);
 			fail();
 			
 		} catch (GarantiaExtendidaException e) {
 			// assert
 			Assert.assertEquals(Vendedor.EL_PRODUCTO_TIENE_GARANTIA, e.getMessage());
 		}
+	}
+
+	@Test
+	public void testFechaFinal() {
+		String date = "2018-08-16";
+		String endDate = "2019-04-06";
+		LocalDate localDate = LocalDate.parse(date);
+		LocalDate finalDate = null;
+		LocalDate testFinalDate = LocalDate.parse(endDate);
+
+		int diasEfectivos = Vendedor.diasEfectivos(199);
+
+		finalDate = localDate.plusDays(diasEfectivos);
+
+		Assert.assertEquals(finalDate, testFinalDate);
 	}
 }

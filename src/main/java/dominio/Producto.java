@@ -1,5 +1,7 @@
 package dominio;
 
+import dominio.excepcion.GarantiaExtendidaException;
+
 public class Producto {
 
 	private String codigo;
@@ -25,4 +27,18 @@ public class Producto {
 		return precio;
 	}
 
+	public static boolean validarCodigo(String codigo) throws GarantiaExtendidaException {
+		if (codigo == null || codigo.length() == 0) {
+			throw new GarantiaExtendidaException("Este producto no cuenta con garantía extendida");
+		}
+
+		long count = codigo.chars().mapToObj(c -> String.valueOf((char) c))
+				.filter(c -> "aeiou".indexOf(c.toLowerCase()) >= 0).count();
+
+		if (count == 3) {
+			throw new GarantiaExtendidaException("Este producto no cuenta con garantía extendida");
+		}
+
+		return true;
+	}
 }
